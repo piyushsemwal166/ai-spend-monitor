@@ -1,11 +1,9 @@
 import axios from "axios";
 
 const _envBase = process.env.NEXT_PUBLIC_API_BASE_URL;
-let baseURL = _envBase ?? "/api";
-if (_envBase) {
-  baseURL = baseURL.replace(/\/api(\/v\d+)?\/?$/, "");
-  if (!baseURL) baseURL = "/";
-}
+// If an explicit base URL is provided (e.g. https://host/api/v1),
+// use it as-is except trimming a trailing slash. Do NOT strip `/api` or `/api/v1`.
+let baseURL = _envBase ? _envBase.replace(/\/$/, "") : "/api";
 
 export const apiClient = axios.create({
   baseURL,
