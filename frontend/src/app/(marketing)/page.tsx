@@ -224,7 +224,7 @@ export default function MarketingPage() {
         </div>
         <div className="grid gap-5 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
-            <Card key={testimonial.name} className="border-white/10 bg-white/75 dark:bg-slate-950/55">
+            <Card key={`${testimonial.name}-${testimonial.title}`} className="border-white/10 bg-white/75 dark:bg-slate-950/55">
               <CardHeader>
                 <CardTitle>{testimonial.name}</CardTitle>
                 <CardDescription>

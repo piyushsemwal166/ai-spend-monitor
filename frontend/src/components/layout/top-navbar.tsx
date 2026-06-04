@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, ChevronDown, Sparkles } from "lucide-react";
 import { SearchInput } from "@/components/shared/search-input";
@@ -35,6 +36,9 @@ export function TopNavbar() {
         </div>
 
         <div className="flex items-center gap-3">
+          <Link href="/" className={buttonClassName({ variant: "secondary", size: "sm" })}>
+            Homepage
+          </Link>
           <Button variant="secondary" size="sm" className="hidden xl:inline-flex">
             <Bell className="h-4 w-4" />
             Notifications

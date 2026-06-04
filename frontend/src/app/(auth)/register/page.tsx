@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -29,7 +30,14 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { signUp } = useAuth();
+  const { user, isLoading, signUp } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace("/dashboard");
+    }
+  }, [isLoading, user, router]);
+
   const {
     register,
     handleSubmit,
@@ -57,6 +65,7 @@ export default function RegisterPage() {
       error: "Unable to register. Check the API connection.",
     });
     router.push("/dashboard");
+    router.refresh();
   });
 
   return (

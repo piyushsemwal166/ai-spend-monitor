@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -23,7 +24,14 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { user, isLoading, signIn } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.replace("/dashboard");
+    }
+  }, [isLoading, user, router]);
+
   const {
     register,
     handleSubmit,
@@ -44,6 +52,7 @@ export default function LoginPage() {
       error: "Unable to sign in. Check the API connection.",
     });
     router.push("/dashboard");
+    router.refresh();
   });
 
   return (

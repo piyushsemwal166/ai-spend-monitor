@@ -1,9 +1,21 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { marketingLinks } from "@/constants/navigation";
 import { buttonClassName } from "@/components/ui/button";
+import { useAuth } from "@/providers/auth-provider";
 
 export function SiteNavbar() {
+  const router = useRouter();
+  const { user, isLoading, signOut } = useAuth();
+
+  const handleLogout = () => {
+    signOut();
+    router.refresh();
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-white/50 backdrop-blur-xl dark:bg-slate-950/40">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
@@ -23,16 +35,30 @@ export function SiteNavbar() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link href="/login" className={buttonClassName({ variant: "ghost", size: "sm" })}>
-            Login
-          </Link>
-          <Link href="/register" className={buttonClassName({ variant: "secondary", size: "sm" })}>
-            Sign up
-          </Link>
-          <Link href="/dashboard" className={buttonClassName({ variant: "primary", size: "sm" })}>
-            Explore Dashboard
-            <ArrowRight className="h-4 w-4" />
-          </Link>
+          {isLoading ? null : user ? (
+            <>
+              <Link href="/dashboard" className={buttonClassName({ variant: "primary", size: "sm" })}>
+                Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <button type="button" onClick={handleLogout} className={buttonClassName({ variant: "secondary", size: "sm" })}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className={buttonClassName({ variant: "ghost", size: "sm" })}>
+                Login
+              </Link>
+              <Link href="/register" className={buttonClassName({ variant: "secondary", size: "sm" })}>
+                Sign up
+              </Link>
+              <Link href="/dashboard" className={buttonClassName({ variant: "primary", size: "sm" })}>
+                Explore Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
