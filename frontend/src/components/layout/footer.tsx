@@ -68,7 +68,7 @@ export function Footer() {
           </div>
 
           <div>
-            Support: <a href="mailto:support@aispendos.com" className="transition hover:text-slate-900 dark:hover:text-white">support@aispendos.com</a>
+            Support: <a href="mailto:piyushdattsemwal@gmail.com" className="transition hover:text-slate-900 dark:hover:text-white">piyushdattsemwal@gmail.com</a>
           </div>
 
           <div className="text-slate-500 dark:text-slate-400">© 2026 AI Spend OS. All rights reserved.</div>

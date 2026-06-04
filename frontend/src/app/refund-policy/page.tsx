@@ -92,8 +92,8 @@ export default function RefundPolicyPage() {
             <h2 className="text-lg font-semibold text-slate-950 dark:text-white">10. Contact</h2>
             <p>
               For refund-related support, contact{" "}
-              <a className="font-medium text-cyan-700 underline-offset-2 hover:underline dark:text-cyan-300" href="mailto:support@aispendos.com">
-                support@aispendos.com
+              <a className="font-medium text-cyan-700 underline-offset-2 hover:underline dark:text-cyan-300" href="mailto:piyushdattsemwal@gmail.com">
+                piyushdattsemwal@gmail.com
               </a>
               .
             </p>

@@ -120,8 +120,8 @@ export default function TermsAndConditionsPage() {
             <h2 className="text-lg font-semibold text-slate-950 dark:text-white">13. Contact</h2>
             <p>
               Questions about these Terms can be sent to{" "}
-              <a className="font-medium text-cyan-700 underline-offset-2 hover:underline dark:text-cyan-300" href="mailto:support@aispendos.com">
-                support@aispendos.com
+              <a className="font-medium text-cyan-700 underline-offset-2 hover:underline dark:text-cyan-300" href="mailto:piyushdattsemwal@gmail.com">
+                piyushdattsemwal@gmail.com
               </a>
               .
             </p>
