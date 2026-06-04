@@ -22,14 +22,14 @@ export function DataTable<T extends object>({
   return (
     <div className="glass-panel overflow-hidden rounded-3xl">
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-slate-200/70 dark:divide-white/10">
+        <table className="min-w-[720px] divide-y divide-slate-200/70 dark:divide-white/10 md:min-w-full">
           <thead className="bg-white/50 dark:bg-white/5">
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.header}
                   className={cn(
-                    "px-5 py-4 text-left text-xs font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400",
+                    "whitespace-nowrap px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400 sm:px-5 sm:text-xs",
                     column.className,
                   )}
                 >
@@ -49,7 +49,7 @@ export function DataTable<T extends object>({
               data.map((row) => (
                 <tr key={rowKey(row)} className="transition hover:bg-white/70 dark:hover:bg-white/5">
                   {columns.map((column) => (
-                    <td key={column.header} className={cn("px-5 py-4 text-sm text-slate-700 dark:text-slate-300", column.className)}>
+                    <td key={column.header} className={cn("whitespace-nowrap px-4 py-4 text-sm text-slate-700 dark:text-slate-300 sm:px-5", column.className)}>
                       {column.cell ? column.cell(row) : String(row[column.accessor as keyof T] ?? "")}
                     </td>
                   ))}

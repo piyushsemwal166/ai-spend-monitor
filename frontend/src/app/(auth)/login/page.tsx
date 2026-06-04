@@ -77,7 +77,7 @@ export default function LoginPage() {
             </div>
           </FormField>
 
-          <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+          <div className="flex flex-col gap-3 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between dark:text-slate-400">
             <label className="flex items-center gap-2">
               <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-cyan-600" {...register("rememberMe")} />
               Remember me
@@ -87,7 +87,7 @@ export default function LoginPage() {
             </Link>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+          <Button type="submit" className="h-12 w-full rounded-full" disabled={isSubmitting}>
             {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
             Sign in
           </Button>

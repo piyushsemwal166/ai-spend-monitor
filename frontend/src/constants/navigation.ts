@@ -2,10 +2,10 @@ import { BarChart3, FolderKanban, Home, Layers3, Settings, Wallet, FileText, Use
 import { Workflow } from "lucide-react";
 
 export const marketingLinks = [
-  { label: "Features", href: "#features" },
-  { label: "How it works", href: "#how-it-works" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Pricing", href: "#pricing" },
+  { label: "Features", href: "/#features" },
+  { label: "How it works", href: "/#how-it-works" },
+  { label: "Testimonials", href: "/#testimonials" },
+  { label: "Pricing", href: "/#pricing" },
 ];
 
 export const dashboardNavigation = [

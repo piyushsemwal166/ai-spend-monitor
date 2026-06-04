@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ArrowRight, Menu, ShieldCheck, X } from "lucide-react";
 import { marketingLinks } from "@/constants/navigation";
 import { buttonClassName } from "@/components/ui/button";
 import { useAuth } from "@/providers/auth-provider";
@@ -10,9 +11,11 @@ import { useAuth } from "@/providers/auth-provider";
 export function SiteNavbar() {
   const router = useRouter();
   const { user, isLoading, signOut } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleLogout = () => {
     signOut();
+    setMobileOpen(false);
     router.refresh();
   };
 
@@ -28,13 +31,16 @@ export function SiteNavbar() {
 
         <nav className="hidden items-center gap-6 lg:flex">
           {marketingLinks.map((item) => (
-            <a key={item.href} href={item.href} className="text-sm font-medium text-slate-600 transition hover:text-slate-950 dark:text-slate-300 dark:hover:text-white">
+            <Link key={item.href} href={item.href} className="text-sm font-medium text-slate-600 transition hover:text-slate-950 dark:text-slate-300 dark:hover:text-white">
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="hidden items-center gap-2 lg:flex">
+          <Link href="/about" className={buttonClassName({ variant: "ghost", size: "sm" })}>
+            About Us
+          </Link>
           {isLoading ? null : user ? (
             <>
               <Link href="/dashboard" className={buttonClassName({ variant: "primary", size: "sm" })}>
@@ -60,7 +66,65 @@ export function SiteNavbar() {
             </>
           )}
         </div>
+
+        <button
+          type="button"
+          onClick={() => setMobileOpen((value) => !value)}
+          className={buttonClassName({ variant: "secondary", size: "sm", className: "lg:hidden" })}
+          aria-label="Toggle navigation menu"
+          aria-expanded={mobileOpen}
+        >
+          {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          Menu
+        </button>
       </div>
+
+      {mobileOpen ? (
+        <div className="border-t border-white/10 px-4 py-4 sm:px-6 lg:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col gap-4">
+            <nav className="grid gap-2">
+              {marketingLinks.map((item) => (
+                <Link
+                  key={`mobile-${item.href}`}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-xl px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-white/70 dark:text-slate-200 dark:hover:bg-white/5"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+
+            <div className="grid grid-cols-2 gap-2">
+              <Link href="/about" onClick={() => setMobileOpen(false)} className={buttonClassName({ variant: "ghost", size: "sm", className: "w-full" })}>
+                About Us
+              </Link>
+              {isLoading ? null : user ? (
+                <>
+                  <Link href="/dashboard" onClick={() => setMobileOpen(false)} className={buttonClassName({ variant: "primary", size: "sm", className: "w-full" })}>
+                    Dashboard
+                  </Link>
+                  <button type="button" onClick={handleLogout} className={buttonClassName({ variant: "secondary", size: "sm", className: "w-full" })}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link href="/login" onClick={() => setMobileOpen(false)} className={buttonClassName({ variant: "ghost", size: "sm", className: "w-full" })}>
+                    Login
+                  </Link>
+                  <Link href="/register" onClick={() => setMobileOpen(false)} className={buttonClassName({ variant: "secondary", size: "sm", className: "w-full" })}>
+                    Sign up
+                  </Link>
+                  <Link href="/dashboard" onClick={() => setMobileOpen(false)} className={buttonClassName({ variant: "primary", size: "sm", className: "col-span-2 w-full" })}>
+                    Explore Dashboard
+                  </Link>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </header>
   );
 }

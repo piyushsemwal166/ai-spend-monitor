@@ -104,7 +104,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="space-y-8 pb-10">
+    <div className="space-y-6 pb-10 sm:space-y-8">
       {subscriptionQuery.data?.plan?.slug === "free" ? (
         <div className="rounded-md border border-amber-200/60 bg-amber-50/60 p-4">
           <p className="text-sm font-medium text-amber-900">Upgrade to Pro to unlock OpenAI, Claude, Groq and advanced analytics.</p>
@@ -122,29 +122,29 @@ export default function DashboardPage() {
         }
       />
 
-      <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 sm:gap-5">
         {stats.map((stat) => (
           <StatsCard key={stat.title} {...stat} />
         ))}
       </section>
 
-      <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 sm:gap-5">
         {usageStats.map((stat) => (
           <StatsCard key={stat.title} {...stat} />
         ))}
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.5fr_0.9fr]">
+      <section className="grid gap-5 xl:grid-cols-[1.5fr_0.9fr] sm:gap-6">
         <SpendChart title="Daily Spend" description="A seven-day view of spend velocity across the platform." data={(dailyQuery.data ?? []) as unknown as Array<Record<string, string | number>>} xKey="date" valueKey="spend" />
         <BudgetChart title="Budget Utilization" description="Workspace remaining budget snapshot." data={[{ name: "Used", value: budgetUtilization }, { name: "Remaining", value: Math.max(100 - budgetUtilization, 0) }]} />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+      <section className="grid gap-5 xl:grid-cols-[1.1fr_0.9fr] sm:gap-6">
         <SpendChart title="Monthly Spend" description="Month-over-month spend growth and seasonality." data={(monthlyQuery.data ?? []) as unknown as Array<Record<string, string | number>>} xKey="month" valueKey="spend" />
         <ActivityFeed title="Activity feed" items={activityItems} />
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      <section className="grid gap-5 xl:grid-cols-2 sm:gap-6">
         <Card className="border-white/10 bg-white/75 dark:bg-slate-950/55">
           <CardHeader>
             <CardTitle>Recent Projects</CardTitle>

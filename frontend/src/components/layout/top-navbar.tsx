@@ -23,23 +23,23 @@ export function TopNavbar() {
   return (
     <header className="sticky top-0 z-30 border-b border-white/10 bg-white/65 px-4 py-4 backdrop-blur-xl dark:bg-slate-950/45 sm:px-6 lg:px-8">
       <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-        <div className="flex flex-1 items-center gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-4">
           <div className="hidden min-w-0 flex-1 xl:block">
             <SearchInput placeholder="Search organizations, projects, budgets..." />
           </div>
-          <div className="flex items-center gap-2">
-            <Badge variant="accent" className="hidden sm:inline-flex">
+          <div className="flex min-w-0 items-center gap-2">
+            <Badge variant="accent" className="hidden max-w-full sm:inline-flex">
               <Sparkles className="mr-1 h-3.5 w-3.5" />
               Live
             </Badge>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <Link href="/" className={buttonClassName({ variant: "secondary", size: "sm" })}>
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <Link href="/" className={buttonClassName({ variant: "secondary", size: "sm", className: "whitespace-nowrap" })}>
             Homepage
           </Link>
-          <Button variant="secondary" size="sm" className="hidden xl:inline-flex">
+          <Button variant="secondary" size="sm" className="hidden whitespace-nowrap xl:inline-flex">
             <Bell className="h-4 w-4" />
             Notifications
           </Button>
@@ -48,13 +48,13 @@ export function TopNavbar() {
               type="button"
               aria-expanded={isProfileOpen}
               onClick={() => setIsProfileOpen((current) => !current)}
-              className={buttonClassName({ variant: "secondary", size: "sm" })}
+              className={buttonClassName({ variant: "secondary", size: "sm", className: "max-w-full whitespace-nowrap" })}
               disabled={isLoading}
             >
               <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-[11px] font-semibold text-white">
                 {isLoading ? "..." : user?.name?.slice(0, 1)?.toUpperCase() ?? "?"}
               </span>
-              <span className="hidden sm:inline">
+              <span className="hidden max-w-[9rem] truncate sm:inline lg:max-w-[12rem]">
                 {isLoading ? "Loading session..." : user?.name ?? "Not signed in"}
               </span>
               <ChevronDown className="h-4 w-4" />

@@ -15,7 +15,7 @@ export function Sidebar() {
   const nav = (
     <aside
       className={cn(
-        "glass-panel-strong fixed inset-y-0 left-0 z-50 flex h-full flex-col border-r border-white/10 transition-all duration-300",
+        "glass-panel-strong fixed inset-y-0 left-0 z-50 flex h-full max-w-[calc(100vw-1rem)] flex-col border-r border-white/10 transition-all duration-300 lg:max-w-none",
         collapsed ? "w-20" : "w-72",
         mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
       )}
@@ -38,7 +38,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col gap-6 px-4 py-5">
+      <div className="flex flex-1 min-h-0 flex-col gap-6 px-4 py-5">
         <button
           type="button"
           onClick={() => setCollapsed((value) => !value)}
@@ -48,7 +48,7 @@ export function Sidebar() {
           {collapsed ? null : "Collapse"}
         </button>
 
-        <nav className="flex flex-col gap-2">
+        <nav className="flex min-h-0 flex-col gap-2 overflow-y-auto pr-1">
           {dashboardNavigation.map((item) => {
             const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
             const Icon = item.icon;
