@@ -2,11 +2,11 @@
   "name": "ai-spend-os-backend",
   "version": "1.0.0",
   "private": true,
-  "main": "dist/server.js",
+  "main": "dist/src/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "start": "node dist/src/server.js",
+    "start": "node -r module-alias/register dist/src/server.js",
     "lint": "eslint \"src/**/*.ts\" \"prisma/**/*.ts\"",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -22,9 +22,13 @@
     "express-rate-limit": "^8.0.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.1",
     "prisma": "^6.10.0",
     "zod": "^4.4.3"
+  },
+  "_moduleAliases": {
+    "@": "dist/src"
   },
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
