@@ -1,0 +1,334 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum ProjectStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum Provider {
+  GEMINI
+  OPENAI
+  ANTHROPIC
+  GOOGLE
+  AZURE
+}
+
+enum GatewayStatus {
+  SUCCESS
+  BLOCKED
+  FAILED
+}
+
+model User {
+  id           String              @id @default(cuid())
+  name         String
+  email        String              @unique
+  password     String
+  role         UserRole            @default(MEMBER)
+  teamId       String?
+  team         Team?               @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  teamMemberships TeamMember[]
+  memberships  OrganizationMember[]
+  usageLogs    UsageLog[]
+  gatewayLogs  GatewayLog[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @default(now()) @updatedAt
+
+  @@index([email])
+  @@index([teamId])
+}
+
+model Organization {
+  id          String              @id @default(cuid())
+  name        String
+  slug        String?             @unique
+  description String?
+  members     OrganizationMember[]
+  teams       Team[]
+  apiKeys     ApiKey[]
+  projects    Project[]
+  usageLogs   UsageLog[]
+  budget      OrganizationBudget?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @default(now()) @updatedAt
+
+  @@index([name])
+  @@index([slug])
+}
+
+model OrganizationMember {
+  id              String       @id @default(cuid())
+  userId          String
+  organizationId  String
+  role            UserRole     @default(MEMBER)
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@unique([userId, organizationId])
+  @@index([userId])
+  @@index([organizationId])
+  @@index([organizationId, role])
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String
+  status         ProjectStatus @default(ACTIVE)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  budget         Budget?
+  usageLogs      UsageLog[]
+  gatewayLogs    GatewayLog[]
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([organizationId])
+  @@index([organizationId, status])
+  @@index([name])
+}
+
+model Team {
+  id             String    @id @default(cuid())
+  name           String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  users          User[]
+  members        TeamMember[]
+  usageLogs      UsageLog[]
+  budget         TeamBudget?
+  gatewayLogs    GatewayLog[]
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now()) @updatedAt
+
+  @@index([organizationId])
+  @@index([name])
+}
+
+model TeamMember {
+  id         String   @id @default(cuid())
+  teamId     String
+  userId     String   @unique
+  role       UserRole @default(MEMBER)
+  team       Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+
+  @@index([teamId])
+  @@index([userId])
+  @@index([teamId, role])
+}
+
+model Budget {
+  id              String   @id @default(cuid())
+  projectId       String   @unique
+  monthlyBudget   Decimal  @db.Decimal(14, 8)
+  currentSpend    Decimal  @db.Decimal(14, 8) @default(0)
+  remainingBudget Decimal  @db.Decimal(14, 8)
+  alertThreshold  Int      @default(80)
+  project         Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([projectId])
+}
+
+model ApiKey {
+  id             String      @id @default(cuid())
+  organizationId String
+  provider       Provider    @default(GEMINI)
+  encryptedKey   String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  @@unique([organizationId, provider])
+  @@index([organizationId])
+  @@index([provider])
+}
+
+model ModelPricing {
+  id                    String   @id @default(cuid())
+  provider              Provider
+  model                 String
+  inputPricePerMillion  Decimal  @db.Decimal(14, 6)
+  outputPricePerMillion Decimal  @db.Decimal(14, 6)
+  updatedAt             DateTime @updatedAt
+
+  @@unique([provider, model])
+  @@index([provider])
+}
+
+model UsageLog {
+  id             String    @id @default(cuid())
+  projectId      String
+  organizationId String?
+  teamId         String?
+  userId         String?
+  model          String
+  provider       Provider
+  tokens         Int       @default(0)
+  cost           Decimal   @db.Decimal(14, 8) @default(0)
+  inputTokens    Int       @default(0)
+  outputTokens   Int       @default(0)
+  totalTokens    Int       @default(0)
+  estimatedCost  Decimal   @db.Decimal(14, 8) @default(0)
+  requestCount   Int       @default(1)
+  project        Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  team           Team?     @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  user           User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([projectId])
+  @@index([organizationId])
+  @@index([teamId])
+  @@index([userId])
+  @@index([projectId, createdAt])
+  @@index([provider])
+}
+
+model TeamBudget {
+  id              String   @id @default(cuid())
+  teamId          String   @unique
+  monthlyBudget   Decimal  @db.Decimal(14, 8)
+  currentSpend    Decimal  @db.Decimal(14, 8) @default(0)
+  remainingBudget Decimal  @db.Decimal(14, 8)
+  alertThreshold  Int      @default(80)
+  team            Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([teamId])
+}
+
+model OrganizationBudget {
+  id              String   @id @default(cuid())
+  organizationId  String   @unique
+  monthlyBudget   Decimal  @db.Decimal(14, 8)
+  currentSpend    Decimal  @db.Decimal(14, 8) @default(0)
+  remainingBudget Decimal  @db.Decimal(14, 8)
+  alertThreshold  Int      @default(80)
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+model GatewayLog {
+  id             String        @id @default(cuid())
+  requestId      String?       @unique
+  userId         String?
+  teamId         String?
+  projectId      String
+  provider       Provider
+  model          String
+  latency        Int
+  status         GatewayStatus
+  estimatedCost  Decimal       @db.Decimal(14, 8) @default(0)
+  inputTokens    Int           @default(0)
+  outputTokens   Int           @default(0)
+  totalTokens    Int           @default(0)
+  user           User?         @relation(fields: [userId], references: [id], onDelete: SetNull)
+  team           Team?         @relation(fields: [teamId], references: [id], onDelete: SetNull)
+  project        Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+
+  @@index([requestId])
+  @@index([userId])
+  @@index([teamId])
+  @@index([projectId])
+  @@index([provider])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  TRIAL
+}
+
+enum InvoiceStatus {
+  PAID
+  DUE
+  VOID
+}
+
+model SubscriptionPlan {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  name           String
+  priceCents     Int      @default(0)
+  currency       String   @default("INR")
+  projectsLimit  Int?
+  teamsLimit     Int?
+  requestsLimit  Int?
+  providers      String?  // comma separated provider permissions (e.g. "GEMINI")
+  description    String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  subscriptions  Subscription[]
+
+  @@index([slug])
+}
+
+model Subscription {
+  id             String             @id @default(cuid())
+  organizationId String?
+  userId         String?
+  planId         String
+  status         SubscriptionStatus @default(ACTIVE)
+  startedAt      DateTime           @default(now())
+  renewedAt      DateTime?
+  expiresAt      DateTime?
+  metadata       Json?
+
+  plan           SubscriptionPlan   @relation(fields: [planId], references: [id], onDelete: Cascade)
+  invoices       Invoice[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([planId])
+}
+
+model Invoice {
+  id             String        @id @default(cuid())
+  subscriptionId String
+  amountCents     Int
+  currency        String       @default("INR")
+  issuedAt        DateTime     @default(now())
+  dueAt           DateTime?
+  status          InvoiceStatus @default(DUE)
+  metadata        Json?
+
+  subscription    Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @default(now()) @updatedAt
+
+  @@index([subscriptionId])
+  @@index([status])
+}
