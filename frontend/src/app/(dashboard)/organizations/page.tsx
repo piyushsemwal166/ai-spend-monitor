@@ -123,17 +123,17 @@ export default function OrganizationsPage() {
         }
       />
 
-      <section className="grid gap-5 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-3 sm:gap-5">
         {[
           { title: "Total organizations", value: String(organizations.length), icon: Building2 },
           { title: "Team members", value: String(totalMembers), icon: Users2 },
           { title: "Projects", value: String(totalProjects), icon: ArrowUpRight },
         ].map((item) => (
           <Card key={item.title} className="border-white/10 bg-white/75 dark:bg-slate-950/55">
-            <CardContent className="flex items-center justify-between p-6">
+            <CardContent className="flex flex-col items-start justify-between gap-4 p-4 sm:flex-row sm:items-center sm:p-6">
               <div className="space-y-2">
                 <p className="text-sm text-slate-500 dark:text-slate-400">{item.title}</p>
-                <p className="font-display text-3xl font-semibold text-slate-950 dark:text-white">{item.value}</p>
+                <p className="font-display text-2xl font-semibold text-slate-950 dark:text-white sm:text-3xl">{item.value}</p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
                 <item.icon className="h-5 w-5" />
@@ -144,13 +144,13 @@ export default function OrganizationsPage() {
       </section>
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex w-full max-w-xl gap-3">
+        <div className="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
           <Input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search organizations" />
-          <Button type="button" variant="secondary" onClick={handleSearch}>
+          <Button type="button" variant="secondary" onClick={handleSearch} className="w-full sm:w-auto">
             Search
           </Button>
         </div>
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           <span>
             Page {meta.page} of {meta.totalPages || 1}
           </span>
@@ -173,7 +173,7 @@ export default function OrganizationsPage() {
         <CardHeader>
           <CardTitle>Organization overview</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 sm:p-6">
           <DataTable<OrganizationRow>
             rowKey={(row) => row.id}
             columns={[

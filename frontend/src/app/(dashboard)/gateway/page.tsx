@@ -37,17 +37,17 @@ export default function GatewayPage() {
         actions={<Link href="/gateway/logs" className="inline-flex items-center rounded-full border border-slate-200 bg-white/80 px-4 py-2 text-sm font-medium text-slate-950 shadow-sm transition hover:bg-white dark:border-white/10 dark:bg-slate-950/60 dark:text-white">View logs</Link>}
       />
 
-      <section className="grid gap-5 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-3 sm:gap-5">
         {[
           { title: "Total Requests", value: formatCompactNumber(overviewQuery.data?.totalRequests ?? 0), icon: Activity },
           { title: "Average Cost", value: formatCurrency(overviewQuery.data?.averageCost ?? 0), icon: Wallet },
           { title: "Average Latency", value: `${Math.round(overviewQuery.data?.averageLatency ?? 0)} ms`, icon: Clock3 },
         ].map((item) => (
           <Card key={item.title} className="border-white/10 bg-white/75 dark:bg-slate-950/55">
-            <CardContent className="flex items-center justify-between p-6">
+            <CardContent className="flex flex-col items-start justify-between gap-4 p-4 sm:flex-row sm:items-center sm:p-6">
               <div className="space-y-2">
                 <p className="text-sm text-slate-500 dark:text-slate-400">{item.title}</p>
-                <p className="font-display text-3xl font-semibold text-slate-950 dark:text-white">{item.value}</p>
+                <p className="font-display text-2xl font-semibold text-slate-950 dark:text-white sm:text-3xl">{item.value}</p>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
                 <item.icon className="h-5 w-5" />
@@ -57,22 +57,22 @@ export default function GatewayPage() {
         ))}
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+      <section className="grid gap-6 xl:grid-cols-[1fr_0.9fr] sm:gap-7">
         <Card className="border-white/10 bg-white/75 dark:bg-slate-950/55">
           <CardHeader>
             <CardTitle>Provider usage</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 p-4 sm:p-6">
             {providerUsage.length === 0 ? (
               <EmptyState title="No gateway activity yet" description="Send a request through the gateway to populate provider usage." actionLabel="Go to AI Playground" />
             ) : (
               providerUsage.map((row) => (
                 <div key={row.provider} className="space-y-2 rounded-2xl bg-white/70 p-4 dark:bg-white/5">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <span className="font-medium text-slate-950 dark:text-white">{row.provider}</span>
                     <Badge variant="accent">{formatCompactNumber(row.requests)} requests</Badge>
                   </div>
-                  <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+                  <div className="flex flex-col gap-1 text-sm text-slate-500 dark:text-slate-400 sm:flex-row sm:items-center sm:justify-between">
                     <span>{formatCurrency(row.totalSpend)}</span>
                     <span>{Math.round(row.averageLatency)} ms avg latency</span>
                   </div>
@@ -86,7 +86,7 @@ export default function GatewayPage() {
           <CardHeader>
             <CardTitle>Latest gateway activity</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6">
             <DataTable<any>
               rowKey={(row) => row.id}
               columns={[

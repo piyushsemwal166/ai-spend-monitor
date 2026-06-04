@@ -105,14 +105,14 @@ export default function AiPlaygroundPage() {
         }
       />
 
-      <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
+      <section className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr] sm:gap-7">
         <Card className="border-white/10 bg-white/75 dark:bg-slate-950/55">
           <CardHeader>
             <CardTitle>Prompt Gateway</CardTitle>
             <CardDescription>Everything here is routed through the centralized gateway endpoint.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-5">
-            <div className="grid gap-5 md:grid-cols-2">
+          <CardContent className="space-y-5 p-4 sm:p-6">
+            <div className="grid gap-4 md:grid-cols-2 sm:gap-5">
               <FormField label="Project">
                 <Select value={projectId} onChange={(event) => setProjectId(event.target.value)}>
                   {projects.map((project) => (
@@ -151,8 +151,8 @@ export default function AiPlaygroundPage() {
               <Textarea rows={10} value={prompt} onChange={(event) => setPrompt(event.target.value)} placeholder="Ask Gemini to summarize, classify, compare, or inspect usage patterns." />
             </FormField>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <Button type="button" onClick={() => void submitPrompt()} disabled={chatMutation.isPending}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <Button type="button" onClick={() => void submitPrompt()} disabled={chatMutation.isPending} className="w-full sm:w-auto">
                 {chatMutation.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 Send to Gateway
               </Button>
@@ -168,23 +168,23 @@ export default function AiPlaygroundPage() {
             <CardTitle>Response</CardTitle>
             <CardDescription>Live response text and usage metadata are shown here.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-5">
+          <CardContent className="space-y-5 p-4 sm:p-6">
             <div className="grid gap-4 sm:grid-cols-3">
               <div className="rounded-2xl bg-white/70 p-4 dark:bg-white/5">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Input tokens</p>
-                <p className="mt-2 font-display text-2xl font-semibold text-slate-950 dark:text-white">
+                <p className="mt-2 font-display text-xl font-semibold text-slate-950 dark:text-white sm:text-2xl">
                   {formatCompactNumber(chatMutation.data?.usage.inputTokens ?? 0)}
                 </p>
               </div>
               <div className="rounded-2xl bg-white/70 p-4 dark:bg-white/5">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Output tokens</p>
-                <p className="mt-2 font-display text-2xl font-semibold text-slate-950 dark:text-white">
+                <p className="mt-2 font-display text-xl font-semibold text-slate-950 dark:text-white sm:text-2xl">
                   {formatCompactNumber(chatMutation.data?.usage.outputTokens ?? 0)}
                 </p>
               </div>
               <div className="rounded-2xl bg-white/70 p-4 dark:bg-white/5">
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Estimated cost</p>
-                <p className="mt-2 font-display text-2xl font-semibold text-slate-950 dark:text-white">
+                <p className="mt-2 font-display text-xl font-semibold text-slate-950 dark:text-white sm:text-2xl">
                   {formatCurrency(chatMutation.data?.estimatedCost ?? 0)}
                 </p>
               </div>

@@ -87,11 +87,11 @@ export default function TeamsPage() {
       />
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex w-full max-w-xl gap-3">
+        <div className="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
           <Input value={searchInput} onChange={(event) => setSearchInput(event.target.value)} placeholder="Search teams" />
-          <Button type="button" variant="secondary" onClick={handleSearch}>Search</Button>
+          <Button type="button" variant="secondary" onClick={handleSearch} className="w-full sm:w-auto">Search</Button>
         </div>
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           <span>Page {page.page} of {page.totalPages || 1}</span>
           <Button type="button" variant="outline" size="sm" onClick={() => setPage((current) => ({ ...current, page: Math.max(1, current.page - 1) }))} disabled={page.page <= 1}>Previous</Button>
           <Button type="button" variant="outline" size="sm" onClick={() => setPage((current) => ({ ...current, page: Math.min(current.totalPages || 1, current.page + 1) }))} disabled={page.page >= (page.totalPages || 1)}>Next</Button>
@@ -99,7 +99,7 @@ export default function TeamsPage() {
       </div>
 
       <Card className="border-white/10 bg-white/75 dark:bg-slate-950/55">
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <DataTable<TeamRecord>
             rowKey={(row) => row.id}
             columns={[

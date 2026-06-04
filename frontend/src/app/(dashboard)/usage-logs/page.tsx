@@ -97,13 +97,13 @@ export default function UsageLogsPage() {
       />
 
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <div className="flex w-full max-w-xl gap-3">
+        <div className="flex w-full max-w-xl flex-col gap-3 sm:flex-row">
           <Input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search logs by model or provider" />
-          <Button type="button" onClick={handleSearch}>
+          <Button type="button" onClick={handleSearch} className="w-full sm:w-auto">
             Search
           </Button>
         </div>
-        <div className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
           <span>
             Page {meta.page} of {meta.totalPages || 1}
           </span>
@@ -122,23 +122,23 @@ export default function UsageLogsPage() {
         </div>
       </div>
 
-      <section className="grid gap-5 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-3 sm:gap-5">
         {[
           { title: "Total requests", value: formatCompactNumber(summary.totalRequests) },
           { title: "Total tokens", value: formatCompactNumber(summary.totalTokens) },
           { title: "Estimated cost", value: formatCurrency(summary.estimatedCost) },
         ].map((item) => (
           <Card key={item.title} className="border-white/10 bg-white/75 dark:bg-slate-950/55">
-            <CardContent className="space-y-2 p-6">
+            <CardContent className="space-y-2 p-4 sm:p-6">
               <p className="text-sm text-slate-500 dark:text-slate-400">{item.title}</p>
-              <p className="font-display text-3xl font-semibold text-slate-950 dark:text-white">{item.value}</p>
+              <p className="font-display text-2xl font-semibold text-slate-950 dark:text-white sm:text-3xl">{item.value}</p>
             </CardContent>
           </Card>
         ))}
       </section>
 
       <Card className="border-white/10 bg-white/75 dark:bg-slate-950/55">
-        <CardContent className="space-y-4 p-6">
+        <CardContent className="space-y-4 p-4 sm:p-6">
           <DataTable<UsageLogRow>
             rowKey={(row) => row.id}
             columns={[
